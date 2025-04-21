@@ -32,7 +32,7 @@ def read_notes():
 
     # check if storage file exists, if not return.
     if not p.exists():
-        raise FileNotFoundError("No note files found")
+        return
     
     print("Here are your notes: \n")
     # open and write user note to file
@@ -46,8 +46,9 @@ def remove_note() -> str:
 
     # check if storage file exists, if not return.
     if not p.exists():
-        return
+        raise FileNotFoundError("pynote.txt does not exist")
     
+        
     print("Here are your notes: \n")
     # open and write user note to file
     f = p.open()
@@ -81,10 +82,19 @@ def remove_note() -> str:
 
     return removed_note
 
+def assert_is_int() -> None:
+    
+    assert is_int("4") == True
+    assert is_int("") == False
+    assert is_int("one") == False
+    assert is_int(3.33) == True
+
 def run():
     note = input("Please enter a note (enter :d to delete a note or :q to exit):  ")
     if note == ":d":
         note = remove_note()
+        assert note is not None, "FileNotFoundError should be thrown"
+        
         print(f"The following note has been removed: \n\n {note}")
     elif note == ":q":
         return
@@ -92,20 +102,10 @@ def run():
         save_note(note)
     run()
 
-
 if __name__ == "__main__":
     print("Welcome to PyNote! \n")
     read_notes()
 
+    assert_is_int()
     run()
 
-    assert is_int("4") == True
-    assert is_int("") == False
-    assert is_int("one") == False
-    assert is_int(3.33) == True
-
-    try:
-        remove_note()
-        assert False, "FileNotFoundError was not raised."
-    except FileNotFoundError:
-        pass
